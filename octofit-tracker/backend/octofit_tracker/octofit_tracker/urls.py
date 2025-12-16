@@ -13,10 +13,26 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
 from django.contrib import admin
 from django.urls import path, include
+from rest_framework import routers
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+
+@api_view(['GET'])
+def api_root(request, format=None):
+    return Response({
+        'users': request.build_absolute_uri('/api/users/'),
+        'profiles': request.build_absolute_uri('/api/profiles/'),
+        'teams': request.build_absolute_uri('/api/teams/'),
+        'leaderboard': request.build_absolute_uri('/api/leaderboard/'),
+        'workouts': request.build_absolute_uri('/api/workouts/'),
+        'activities': request.build_absolute_uri('/api/activities/'),
+    })
 
 urlpatterns = [
+    path('', api_root, name='api-root'),
     path('admin/', admin.site.urls),
     path('api/', include('users.urls')),
     path('api/', include('activities.urls')),
